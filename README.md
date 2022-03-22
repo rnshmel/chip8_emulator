@@ -11,7 +11,7 @@ When the program starts, it will occasionally crash and display the following me
 this seems to be an issue with how SDL2 interacts with XWindow; I have not found the root cause of the bug yet since it can be fixed by just retrying the command
 
 # Overview
-CHIP8 is a simple, 8-bit, assembly language used for simple game development and still has a small following of dedicated developers to this day. CHIP-8 programs are strictly hexadecimal based. Each CHIP-8 instruction is two bytes in length and is represented using four hexadecimal digits. CHIP-8 instructions are stored directly in system memory. On many of the hobbyist computers of old, all CHIP-8 code would be entered directly into the system using toggle switches or a memory editing utility. Modern platforms allow files containing the binary data corresponding to the hexadecimal instructions of a CHIP-8 program to be loaded into an interpreter. By modern standards, CHIP8 is very simple, consiting of:  
+CHIP8 is a simple, 8-bit, assembly language used for simple game development and still has a small following of dedicated developers to this day. CHIP-8 programs are strictly hexadecimal based. Each CHIP-8 instruction is two bytes in length and is represented using hexadecimal digits. CHIP-8 instructions are stored directly in system memory. Originally, all CHIP-8 code would be entered directly into the system using a disk or memory editing utility. Modern platforms allow files containing the binary data of a CHIP-8 program to be loaded into an emulater designed to replicate the assembly language instructions. By modern standards, CHIP8 is very simple, consiting of:  
 
 4 kilobytes of RAM  
 64 x 32 monochrome pixel display for output  
