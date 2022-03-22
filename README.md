@@ -1,92 +1,79 @@
-# Chip8 Emulator
+# CHIP8 emulator
+Author: Richard Shmel  
+personal project CHIP8 emulator written in C++  
+built and tested on **Ubuntu 20.04**  
+##### TODO
+add SDL2 functions to handle interfacing with the sound timer register and outputting sound  
 
+##### BUGS  
+When the program starts, it will occasionally crash and display the following message:  
+*X Error of failed request:  BadWindow (invalid Window parameter)*  
+this seems to be an issue with how SDL2 interacts with XWindow; I have not found the root cause of the bug yet since it can be fixed by just retrying the command
 
+# Overview
+CHIP8 is a simple, 8-bit, assembly language used for simple game development and still has a small following of dedicated developers to this day. CHIP-8 programs are strictly hexadecimal based. Each CHIP-8 instruction is two bytes in length and is represented using four hexadecimal digits. CHIP-8 instructions are stored directly in system memory. On many of the hobbyist computers of old, all CHIP-8 code would be entered directly into the system using toggle switches or a memory editing utility. Modern platforms allow files containing the binary data corresponding to the hexadecimal instructions of a CHIP-8 program to be loaded into an interpreter. By modern standards, CHIP8 is very simple, consiting of:  
 
-## Getting started
+4 kilobytes of RAM  
+64 x 32 monochrome pixel display for output  
+A hexidecimal keypad (0x0 through 0xF) for user input  
+CPU registers like a program counter, memory index, and stack pointers  
+A stack for 16-bit addresses, which is used to call and return from subroutines  
+A delay timer and sound timer, decremented at a rate of 60 Hz, used for timing and sound functions  
+16 general-purpose registers (0x0 through 0xF)   
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+This CHIP8 emulator runs CHIP8 programs (typically a ".ch8" file). The main chip8.cpp program will spin off multiple threads to handle the timers, the CPU, and user IO. The program eumulates the CPU in a fetch-decode-execute cycle, pulling OPCODES from RAM and executing them. Output is displayed via a black and white display using the SDL2 library. User input is provided by simulating a hex keyboard with the number keys 0-9 and the letters A-F.  
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+#### Resources
+Cowguide's Chip-8 technical reference  
+http://devernay.free.fr/hacks/chip8/C8TECH10.HTM  
 
-## Add your files
+CHIP8 wikipedia page  
+https://en.wikipedia.org/wiki/CHIP-8  
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+# Usage
+run the emulator by running the chip8 binary (./chip8 from the emulator directory):  
+**-h** displays the help text.  
+**-f** chip8 file that should be loaded into memory.  
+**-s** simulation clock speed (0, 1, or 2). 0 is the slowest speed while 2 is the fastest. This setting manipulates the "internal clock" that the CPU uses (which is really just a delay per instruction). Default value is 1.  
+**-x** pixel scale value. On modern displays, rendering a 64x32 pixel-wide display would be unusable. Instead, the program scales the pixels by a scaling factor. recomended values are either 10 or 20.  
+**-k** use the custom tetris keybinding. This makes the game actually playable by mapping the "hex keyboard" to the arrow keys and the spacebar. Use left and right arrows to move the piece, the spacebar to rotate, and the down key to speed up the fall.  
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/rnshmel/chip8_emulator.git
-git branch -M main
-git push -uf origin main
-```
+#### Examples
+**./chip8 -f./roms/keypad.ch8 -s1 -x10**  
+run keypad test with default speed, pixel size 10, and default keys  
+**./chip8 -f./roms/tetris.ch8 -s1 -x20 -k**  
+run tetris with default speed, pixel size 20, and tetris keys  
 
-## Integrate with your tools
+![Image](tetris_screenshot.png)  
+*take a break and play some tetris*
 
-- [ ] [Set up project integrations](https://gitlab.com/rnshmel/chip8_emulator/-/settings/integrations)
+# Dependencies
+Uses make and GCC to compile  
+Uses SDL for input/output  
 
-## Collaborate with your team
+sudo apt-get update  
+sudo apt-get install git make build-essential libsdl2-dev libsdl2-image-dev  
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+# Installation
+build instructions:
 
-## Test and Deploy
+git clone https://gitlab.com/rnshmel/chip8_emulator.git  
+cd chip8_emulator  
+make all  
 
-Use the built-in continuous integration in GitLab.
+# Directory/File Structure
+### chip8_emulator
+**chip8:** main chip8 binary (will only exist after software build)  
+**Makefile:** makefile to build and link all C++ files  
+**README.md:** readme file with installation and usage instructions  
+**roms:** directory for chip8 programs (called "roms")  
+**src:** directory for chip8 emulator source files  
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### roms
+**tetris.ch8** simple tetris clone  
+**keypad.ch8** keypad input test file  
 
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### src
+**chip8.cpp:** main chip 8 program. Initializes the CPU, I/O, and timing threads. Parses chip8 arguments and passes them to the CPU and I/O.  
+**cpu.cpp and cpu.h:** core CPU program. Runs the fetch-decode-execute cycle. Parses all chip8 OPCODES and handles memory, pointers, registers, and the stack.  
+**iohandle.cpp and iohandle.h:** handles the chip8 input and outpu. Uses the SDL2 library to poll/scan for keyboard input that is passed to the CPU. Handles displaying the pixel data from the CPU to the screen.  
