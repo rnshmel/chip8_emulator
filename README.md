@@ -57,7 +57,7 @@ sudo apt-get install git make build-essential libsdl2-dev libsdl2-image-dev
 # Installation
 build instructions:
 
-git clone https://gitlab.com/rnshmel/chip8_emulator.git  
+git clone https://github.com/rnshmel/chip8_emulator  
 cd chip8_emulator  
 make all  
 
